@@ -100,9 +100,10 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
         cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
     */
 
+
     // Check if ingredientStorage is nullptr
     if (ingredientStorage == nullptr) {
-        cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
+//        cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
         return false;
     }
 
@@ -113,22 +114,22 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
     Pork* suitablePork1 = nullptr;
     Pork* suitablePork2 = nullptr;
 
-
-    cout << "prepareAndServeRamen running"  << endl;
-    cout << "The requiredNoodleSoftness is equal to " << requiredNoodleSoftness<< endl;
-    cout << "The requiredSoupSpiciness is equal to " << requiredSoupSpiciness<< endl;
+//    use for debug only
+//    cout << "prepareAndServeRamen running"  << endl;
+//    cout << "The requiredNoodleSoftness is equal to " << requiredNoodleSoftness<< endl;
+//    cout << "The requiredSoupSpiciness is equal to " << requiredSoupSpiciness<< endl;
 
 
     // Check each ingredient in ingredientStorage
     for (int i = 0; i < ingredientStorageCapacity; i++) {
-        cout << "For loop i = " << i << endl;
+//        cout << "For loop i = " << i << endl;
         if (suitableNoodle != nullptr && suitableSoup != nullptr && suitablePork1 != nullptr &&
             (num_pork == 1 || suitablePork2 != nullptr))
             break;
         // find it is suitable noodle or soup or pork
         if (suitableNoodle == nullptr) {
             Noodle *nP = dynamic_cast<Noodle *> (ingredientStorage[i]);
-            if (nP != nullptr && nP->getSoftness() >= requiredNoodleSoftness) {
+            if ((nP != nullptr && nP->isGood())&& nP->getSoftness() >= requiredNoodleSoftness) {
                 suitableNoodle = nP;
                 ingredientStorage[i] = nullptr;
                 continue;
@@ -136,7 +137,7 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
         }
         if (suitableSoup == nullptr) {
             Soup *sP = dynamic_cast<Soup *> (ingredientStorage[i]);
-            if (sP != nullptr && sP->getSpiciness() >= requiredSoupSpiciness) {
+            if (( sP != nullptr && sP->isGood()) && sP->getSpiciness() >= requiredSoupSpiciness) {
                 suitableSoup = sP;
                 ingredientStorage[i] = nullptr;
                 continue;
@@ -144,21 +145,21 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
         }
         if (suitablePork1 == nullptr) {
             Pork *sPork1 = dynamic_cast<Pork *> (ingredientStorage[i]);
-            if (sPork1 != nullptr) {
+            if (sPork1 != nullptr && sPork1->isGood()) {
                 suitablePork1 = sPork1;
                 ingredientStorage[i] = nullptr;
                 continue;
             }
         } else if (suitablePork2 == nullptr) {
             Pork *sPork2 = dynamic_cast<Pork *> (ingredientStorage[i]);
-            if (sPork2 != nullptr) {
+            if ( sPork2 != nullptr  && sPork2->isGood()) {
                 suitablePork2 = sPork2;
                 ingredientStorage[i] = nullptr;
                 continue;
             }
         }
     }
-
+    //TODO: not enought suitable thing push back should keep in the same order.
         // not enough suitable thing
     if (suitableNoodle == nullptr || suitableSoup == nullptr ||
         suitablePork1 == nullptr || (num_pork == 2 && suitablePork2 == nullptr)) {
@@ -177,15 +178,20 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
         }
         return false;
 
-//    delete suitableNoodle;
-//    delete suitableSoup;
-//    delete suitablePork1;
-//    ingredientStorageUsed--;
-
-
-
-
     }
+
+    delete suitableNoodle;
+    delete suitableSoup;
+    delete suitablePork1;
+    ingredientStorageUsed = ingredientStorageUsed -3;
+    if (num_pork == 2) {
+        delete suitablePork2;
+        ingredientStorageUsed--;
+    }
+
+
+
+
 
     // If all checks pass, ramen can be prepared and served
     ramenServed++;
