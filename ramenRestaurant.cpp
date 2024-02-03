@@ -87,7 +87,9 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
             cout << ingredientStorage[i]->getSoftness() << endl;
         In C++, you can use dynamic_cast for trying to cast it to a Noodle pointer like this:
             Noodle* realNoodlePointer = dynamic_cast<Noodle*>(ingredientStorage[i]);
-        The good thing about dynamic_cast is that it gives you a nullptr if the casting fails when ingredientStorage[i] doesn't really point to a Noodle object. It is useful for checking what object it is pointing to. Of course, before you do dynamic_cast, you should make sure ingredientStorage[i] is not really a nullptr itself first.
+        The good thing about dynamic_cast is that it gives you a nullptr if the casting fails when ingredientStorage[i] doesn't really point to a Noodle object.
+        It is useful for checking what object it is pointing to.
+        Of course, before you do dynamic_cast, you should make sure ingredientStorage[i] is not really a nullptr itself first.
     */
     /*
         Please copy and use the following for the success message:
@@ -96,6 +98,45 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
         Please copy and use the following for the failure message:
         cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
     */
+    int num_pork = doublePork ? 2 :1;
+    cout << "prepareAndServeRamen running"  << endl;
+    cout << "The requiredNoodleSoftness is equal to " << requiredNoodleSoftness<< endl;
+    cout << "The requiredSoupSpiciness is equal to " << requiredSoupSpiciness<< endl;
+    if (ingredientStorage == nullptr) {
+        cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
+        return false;
+    }
+
+    // Check each ingredient in ingredientStorage
+    for (int i = 0; i < ingredientStorageCapacity; i++) {
+        cout << "For loop i = " << i  << endl;
+        // Make sure ingredientStorage[i] is not nullptr
+        if (ingredientStorage[i] != nullptr) {
+            // Check if ingredientStorage[i] points to a Noodle object
+            cout << "ingredientStorage[i] != nullptr "  << endl;
+            Noodle* noodlePtr = dynamic_cast<Noodle*>(ingredientStorage[i]);
+            // Not necessary code just for checking and debuging
+            if (noodlePtr == nullptr) {
+                cout << "noodlePtr == nullptr"  << endl;
+                cout << "This is not Noodle, next slot plz"  << endl;
+                break;
+            }
+            if (noodlePtr != nullptr) {
+                // Check required noodle softness
+                cout << "noodlePtr != nullptr"  << endl;
+                cout << "the noodlePtr->getSoftness() = " << noodlePtr->getSoftness() << endl;
+                if (noodlePtr->getSoftness() > requiredNoodleSoftness) {
+                    cout << "the noodlePtr->getSoftness() > requiredNoodleSoftness" << endl;
+                    cout << "Ramen has been skillfully prepared and happily served! :)" << endl;
+                    return true;
+                }
+            }
+        }
+    }
+
+    // If all checks pass, ramen can be prepared and served
+    cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
+    return false;
 
 }
 

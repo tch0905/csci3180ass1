@@ -42,7 +42,13 @@ int Noodle::getSoftness()
 void Noodle::update()
 {
     //TODO: implement this function
-    //Hint: you can call the base class implementation of a function by BaseClassName::FunctionName()
+    Ingredient::update(); // Call the base class implementation of the update function to update the quality
+
+    // Decrease the softness of the noodle by 5
+    softness -= 5;
+    if (softness < 0) {
+        softness = 0; // Ensure that softness is not negative
+    }
     
 
 }
