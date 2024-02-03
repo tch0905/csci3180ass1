@@ -17,8 +17,10 @@ RamenRestaurant::RamenRestaurant(int ingredientStorageCapacity) : ingredientStor
 
 RamenRestaurant::~RamenRestaurant()
 {
-    //TODO: implement this function
-    //Hint: use "delete" for non-array dynamic objects, and use "delete []" for dynamic arrays
+    for (int i = 0; i < ingredientStorageCapacity; i++) {
+        delete ingredientStorage[i];
+    }
+    delete[] ingredientStorage;
 
 
 }
@@ -79,7 +81,6 @@ bool RamenRestaurant::preparePork()
 
 bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requiredSoupSpiciness, bool doublePork)
 {
-    //TODO: implement this function
     /*
         Hint:
         ingredientStorage[i] is merely an Ingredient pointer.
