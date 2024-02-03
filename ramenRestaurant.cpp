@@ -98,45 +98,98 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
         Please copy and use the following for the failure message:
         cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
     */
-    int num_pork = doublePork ? 2 :1;
-    cout << "prepareAndServeRamen running"  << endl;
-    cout << "The requiredNoodleSoftness is equal to " << requiredNoodleSoftness<< endl;
-    cout << "The requiredSoupSpiciness is equal to " << requiredSoupSpiciness<< endl;
+
+    // Check if ingredientStorage is nullptr
     if (ingredientStorage == nullptr) {
         cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
         return false;
     }
 
+    int num_pork = doublePork ? 2 :1;
+
+    Noodle* suitableNoodle = nullptr;
+    Soup* suitableSoup = nullptr;
+    Pork* suitablePork1 = nullptr;
+    Pork* suitablePork2 = nullptr;
+
+
+    cout << "prepareAndServeRamen running"  << endl;
+    cout << "The requiredNoodleSoftness is equal to " << requiredNoodleSoftness<< endl;
+    cout << "The requiredSoupSpiciness is equal to " << requiredSoupSpiciness<< endl;
+
+
     // Check each ingredient in ingredientStorage
     for (int i = 0; i < ingredientStorageCapacity; i++) {
-        cout << "For loop i = " << i  << endl;
-        // Make sure ingredientStorage[i] is not nullptr
-        if (ingredientStorage[i] != nullptr) {
-            // Check if ingredientStorage[i] points to a Noodle object
-            cout << "ingredientStorage[i] != nullptr "  << endl;
-            Noodle* noodlePtr = dynamic_cast<Noodle*>(ingredientStorage[i]);
-            // Not necessary code just for checking and debuging
-            if (noodlePtr == nullptr) {
-                cout << "noodlePtr == nullptr"  << endl;
-                cout << "This is not Noodle, next slot plz"  << endl;
-                break;
+        cout << "For loop i = " << i << endl;
+        if (suitableNoodle != nullptr && suitableSoup != nullptr && suitablePork1 != nullptr &&
+            (num_pork == 1 || suitablePork2 != nullptr))
+            break;
+        // find it is suitable noodle or soup or pork
+        if (suitableNoodle == nullptr) {
+            Noodle *nP = dynamic_cast<Noodle *> (ingredientStorage[i]);
+            if (nP != nullptr && nP->getSoftness() >= requiredNoodleSoftness) {
+                suitableNoodle = nP;
+                ingredientStorage[i] = nullptr;
+                continue;
             }
-            if (noodlePtr != nullptr) {
-                // Check required noodle softness
-                cout << "noodlePtr != nullptr"  << endl;
-                cout << "the noodlePtr->getSoftness() = " << noodlePtr->getSoftness() << endl;
-                if (noodlePtr->getSoftness() > requiredNoodleSoftness) {
-                    cout << "the noodlePtr->getSoftness() > requiredNoodleSoftness" << endl;
-                    cout << "Ramen has been skillfully prepared and happily served! :)" << endl;
-                    return true;
-                }
+        }
+        if (suitableSoup == nullptr) {
+            Soup *sP = dynamic_cast<Soup *> (ingredientStorage[i]);
+            if (sP != nullptr && sP->getSpiciness() >= requiredSoupSpiciness) {
+                suitableSoup = sP;
+                ingredientStorage[i] = nullptr;
+                continue;
+            }
+        }
+        if (suitablePork1 == nullptr) {
+            Pork *sPork1 = dynamic_cast<Pork *> (ingredientStorage[i]);
+            if (sPork1 != nullptr) {
+                suitablePork1 = sPork1;
+                ingredientStorage[i] = nullptr;
+                continue;
+            }
+        } else if (suitablePork2 == nullptr) {
+            Pork *sPork2 = dynamic_cast<Pork *> (ingredientStorage[i]);
+            if (sPork2 != nullptr) {
+                suitablePork2 = sPork2;
+                ingredientStorage[i] = nullptr;
+                continue;
             }
         }
     }
 
+        // not enough suitable thing
+    if (suitableNoodle == nullptr || suitableSoup == nullptr ||
+        suitablePork1 == nullptr || (num_pork == 2 && suitablePork2 == nullptr)) {
+        cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
+        for (int i = 0; i < ingredientStorageCapacity; i++) {
+            if (ingredientStorage[i] == nullptr) {
+                if (suitableNoodle != nullptr && dynamic_cast<Noodle *>(suitableNoodle) != nullptr)
+                    ingredientStorage[i] = suitableNoodle;
+                else if (suitableSoup != nullptr && dynamic_cast<Soup *>(suitableSoup) != nullptr)
+                    ingredientStorage[i] = suitableSoup;
+                else if (suitablePork1 != nullptr && dynamic_cast<Pork *>(suitablePork1) != nullptr)
+                    ingredientStorage[i] = suitablePork1;
+                else if (suitablePork2 != nullptr && dynamic_cast<Pork *>(suitablePork2) != nullptr)
+                    ingredientStorage[i] = suitablePork2;
+            }
+        }
+        return false;
+
+//    delete suitableNoodle;
+//    delete suitableSoup;
+//    delete suitablePork1;
+//    ingredientStorageUsed--;
+
+
+
+
+    }
+
     // If all checks pass, ramen can be prepared and served
-    cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
-    return false;
+    ramenServed++;
+    cout << "Ramen has been skillfully prepared and happily served! :)" << endl;
+    return true;
 
 }
 
