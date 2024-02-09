@@ -165,8 +165,8 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
             }
         }
     }
-    //TODO: not enough suitable thing push back should keep in the same order.
-        // not enough suitable thing
+
+
     if (suitableNoodle == nullptr || suitableSoup == nullptr ||
         suitablePork1 == nullptr || (num_pork == 2 && suitablePork2 == nullptr)) {
         cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
