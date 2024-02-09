@@ -170,14 +170,31 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
         suitablePork1 == nullptr || (num_pork == 2 && suitablePork2 == nullptr)) {
         cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
 
-        ingredientStorage[back_index[0]] = (back_index[0] != -1 && dynamic_cast<Noodle *>(suitableNoodle) != nullptr) ? suitableNoodle : nullptr;
-        ingredientStorage[back_index[1]] = (back_index[1] != -1 && dynamic_cast<Soup *>(suitableNoodle) != nullptr) ? suitableNoodle : nullptr;
-        ingredientStorage[back_index[2]] = (back_index[2] != -1 && dynamic_cast<Pork *>(suitableNoodle) != nullptr) ? suitableNoodle : nullptr;
-        ingredientStorage[back_index[3]] = (back_index[3] != -1 && dynamic_cast<Pork *>(suitableNoodle) != nullptr) ? suitableNoodle : nullptr;
+        if (back_index[0] != -1 && dynamic_cast<Noodle *>(suitableNoodle) != nullptr)
+            ingredientStorage[back_index[0]] = suitableNoodle;
+        else
+            ingredientStorage[back_index[0]] = nullptr;
 
+        if (back_index[1] != -1 && dynamic_cast<Soup *>(suitableSoup) != nullptr)
+            ingredientStorage[back_index[1]] = suitableSoup;
+        else
+            ingredientStorage[back_index[1]] = nullptr;
 
+        if (back_index[2] != -1 && dynamic_cast<Pork *>(suitablePork1) != nullptr)
+            ingredientStorage[back_index[2]] = suitablePork1;
+        else
+            ingredientStorage[back_index[2]] = nullptr;
+
+        if (back_index[3] != -1 && dynamic_cast<Pork *>(suitablePork2) != nullptr)
+            ingredientStorage[back_index[3]] = suitablePork2;
+        else
+            ingredientStorage[back_index[3]] = nullptr;
+
+        delete suitableNoodle;
+        delete suitableSoup;
+        delete suitablePork1;
+        delete suitablePork2;
         return false;
-
     }
 
     delete suitableNoodle;
