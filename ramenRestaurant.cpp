@@ -5,6 +5,7 @@
 #include "soup.h"
 #include "pork.h"
 #include <iostream>
+#include <vector>
 using std::cout;
 using std::endl;
 
@@ -108,13 +109,12 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
     }
 
     int num_pork = doublePork ? 2 :1;
+    std::vector<int> dA(4,-1);
 
     Noodle* suitableNoodle = nullptr;
     Soup* suitableSoup = nullptr;
     Pork* suitablePork1 = nullptr;
     Pork* suitablePork2 = nullptr;
-    int back_index[4] = {-1,-1,-1,-1};
-
 
 //    use for debug only
 //    cout << "prepareAndServeRamen running"  << endl;
@@ -132,69 +132,61 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
         if (suitableNoodle == nullptr) {
             Noodle *nP = dynamic_cast<Noodle *> (ingredientStorage[i]);
             if ((nP != nullptr && nP->isGood())&& nP->getSoftness() >= requiredNoodleSoftness) {
-                back_index[0] = i;
                 suitableNoodle = nP;
-                ingredientStorage[i] = nullptr;
+                dA[0] = i;
+//                ingredientStorage[i] = nullptr;
                 continue;
             }
         }
         if (suitableSoup == nullptr) {
             Soup *sP = dynamic_cast<Soup *> (ingredientStorage[i]);
             if (( sP != nullptr && sP->isGood()) && sP->getSpiciness() >= requiredSoupSpiciness) {
-                back_index[1] = i;
                 suitableSoup = sP;
-                ingredientStorage[i] = nullptr;
+                dA[1] = i;
+//                ingredientStorage[i] = nullptr;
                 continue;
             }
         }
         if (suitablePork1 == nullptr) {
             Pork *sPork1 = dynamic_cast<Pork *> (ingredientStorage[i]);
             if (sPork1 != nullptr && sPork1->isGood()) {
-                back_index[2] = i;
                 suitablePork1 = sPork1;
-                ingredientStorage[i] = nullptr;
+                dA[2] = i;
+//                ingredientStorage[i] = nullptr;
                 continue;
             }
         } else if (suitablePork2 == nullptr) {
             Pork *sPork2 = dynamic_cast<Pork *> (ingredientStorage[i]);
             if ( sPork2 != nullptr  && sPork2->isGood()) {
-                back_index[2] = i;
                 suitablePork2 = sPork2;
-                ingredientStorage[i] = nullptr;
+                dA[3] = i;
+//                ingredientStorage[i] = nullptr;
                 continue;
             }
         }
     }
-
+    //TODO: not enough suitable thing push back should keep in the same order.
+        // not enough suitable thing
     if (suitableNoodle == nullptr || suitableSoup == nullptr ||
         suitablePork1 == nullptr || (num_pork == 2 && suitablePork2 == nullptr)) {
         cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
-
-        if (back_index[0] != -1 && dynamic_cast<Noodle *>(suitableNoodle) != nullptr)
-            ingredientStorage[back_index[0]] = suitableNoodle;
-        else
-            ingredientStorage[back_index[0]] = nullptr;
-
-        if (back_index[1] != -1 && dynamic_cast<Soup *>(suitableSoup) != nullptr)
-            ingredientStorage[back_index[1]] = suitableSoup;
-        else
-            ingredientStorage[back_index[1]] = nullptr;
-
-        if (back_index[2] != -1 && dynamic_cast<Pork *>(suitablePork1) != nullptr)
-            ingredientStorage[back_index[2]] = suitablePork1;
-        else
-            ingredientStorage[back_index[2]] = nullptr;
-
-        if (back_index[3] != -1 && dynamic_cast<Pork *>(suitablePork2) != nullptr)
-            ingredientStorage[back_index[3]] = suitablePork2;
-        else
-            ingredientStorage[back_index[3]] = nullptr;
-
-        delete suitableNoodle;
-        delete suitableSoup;
-        delete suitablePork1;
-        delete suitablePork2;
+//        for (int i = 0; i < ingredientStorageCapacity; i++) {
+//            if (ingredientStorage[i] == nullptr) {
+//                if (suitableNoodle != nullptr && dynamic_cast<Noodle *>(suitableNoodle) != nullptr)
+//                    ingredientStorage[i] = suitableNoodle;
+//                else if (suitableSoup != nullptr && dynamic_cast<Soup *>(suitableSoup) != nullptr)
+//                    ingredientStorage[i] = suitableSoup;
+//                else if (suitablePork1 != nullptr && dynamic_cast<Pork *>(suitablePork1) != nullptr)
+//                    ingredientStorage[i] = suitablePork1;
+//                else if (suitablePork2 != nullptr && dynamic_cast<Pork *>(suitablePork2) != nullptr)
+//                    ingredientStorage[i] = suitablePork2;
+//            }
+//        }
         return false;
+
+    }
+    for(int i=0;i<4;i++){
+        ingredientStorage[dA[i]] = nullptr;
     }
 
     delete suitableNoodle;
