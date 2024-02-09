@@ -179,9 +179,9 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
 
     }
 
-//    delete suitableNoodle;
-//    delete suitableSoup;
-//    delete suitablePork1;
+    delete suitableNoodle;
+    delete suitableSoup;
+    delete suitablePork1;
     ingredientStorageUsed = ingredientStorageUsed -3;
     if (num_pork == 2) {
         delete suitablePork2;
