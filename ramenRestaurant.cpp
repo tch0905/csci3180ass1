@@ -20,7 +20,7 @@ RamenRestaurant::~RamenRestaurant()
     for (int i = 0; i < ingredientStorageCapacity; i++) {
         delete ingredientStorage[i];
     }
-    delete[] ingredientStorage;
+//    delete[] ingredientStorage;
 
 
 }
