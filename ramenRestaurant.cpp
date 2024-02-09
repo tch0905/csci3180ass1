@@ -198,15 +198,10 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
         ingredientStorageUsed--;
     }
 
-
-
-
-
     // If all checks pass, ramen can be prepared and served
     ramenServed++;
     cout << "Ramen has been skillfully prepared and happily served! :)" << endl;
     return true;
-
 }
 
 void RamenRestaurant::update()
