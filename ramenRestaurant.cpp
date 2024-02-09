@@ -169,12 +169,18 @@ bool RamenRestaurant::prepareAndServeRamen(int requiredNoodleSoftness, int requi
     if (suitableNoodle == nullptr || suitableSoup == nullptr ||
         suitablePork1 == nullptr || (num_pork == 2 && suitablePork2 == nullptr)) {
         cout << "Oh no, we cannot prepare the ramen requested! :(" << endl;
-        ingredientStorage[back_index[0]] = (back_index[0] != -1) ? suitableNoodle : nullptr;
-        ingredientStorage[back_index[1]] = (back_index[1] != -1) ? suitableNoodle : nullptr;
-        ingredientStorage[back_index[2]] = (back_index[2] != -1) ? suitableNoodle : nullptr;
-        ingredientStorage[back_index[3]] = (back_index[3] != -1) ? suitableNoodle : nullptr;
-
-
+        for (int i = 0; i < ingredientStorageCapacity; i++) {
+            if (ingredientStorage[i] == nullptr) {
+                if (suitableNoodle != nullptr && dynamic_cast<Noodle *>(suitableNoodle) != nullptr)
+                    ingredientStorage[i] = suitableNoodle;
+                else if (suitableSoup != nullptr && dynamic_cast<Soup *>(suitableSoup) != nullptr)
+                    ingredientStorage[i] = suitableSoup;
+                else if (suitablePork1 != nullptr && dynamic_cast<Pork *>(suitablePork1) != nullptr)
+                    ingredientStorage[i] = suitablePork1;
+                else if (suitablePork2 != nullptr && dynamic_cast<Pork *>(suitablePork2) != nullptr)
+                    ingredientStorage[i] = suitablePork2;
+            }
+        }
         return false;
 
     }
