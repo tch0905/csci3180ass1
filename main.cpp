@@ -26,7 +26,7 @@ int main()
     cout << q << endl;
     cout << &q << endl;
     cout << *q << endl;
-//    p = new int(1232);
+    p = new int(1232);
 
 
     return 0;
